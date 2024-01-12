@@ -10,4 +10,5 @@ urlpatterns = [
     # second arg - the view to render
     # thrid arg(opt) - names the route
     path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
 ]
