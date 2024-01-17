@@ -14,3 +14,38 @@ class Cat(models.Model):
     # this is the get_absolute_url method, it redirects to the detail page where appropriate
     def get_absolute_url(self):
         return reverse('detail', kwargs={'cat_id': self.id})
+
+MEALS = (
+    # this is a tuple with multiple tuples
+    # each of these is called a 2-tuple
+    ('B', 'Breakfast'),
+    ('L', 'Lunch'),
+    ('D', 'Dinner'),
+)
+
+# The model for feedings - this is a 1:M relationship with cats
+    # one cat can have many feedings
+class Feeding(models.Model):
+    # our model attributes go here
+    date = models.DateField()
+    # meals are a charfield with max_length of one, because we're only going to save the first initial of each meal
+    # this will help generate a dropdown in the automagically created modelform
+    # B-reakfast
+    # L-unch
+    # D-inner
+    meal = models.CharField(
+        max_length=1,
+        # add the custom 'choices' field option
+        # this is what will create our dropdown menu
+        choices=MEALS,
+        # set the default choice, to be 'B'
+        default=MEALS[0][0]
+    )
+    # creates the one to many relationship - Cat -< Feedings
+    # models.ForeignKey needs two args, the model, and what to do if the parent model is deleted.
+    # in the db, the column in the feedings table for the FK will be called cat_id, because django, by default, appends _id to the name of the model
+    # DO NOT CONFUSE THIS WITH MONGODB AND THEIR `._id` NOT THE SAME
+    cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.get_meal_display()} on {self.date}"
