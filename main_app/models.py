@@ -27,7 +27,8 @@ MEALS = (
     # one cat can have many feedings
 class Feeding(models.Model):
     # our model attributes go here
-    date = models.DateField()
+    # we can add a custom label to show up on our forms
+    date = models.DateField('feeding date')
     # meals are a charfield with max_length of one, because we're only going to save the first initial of each meal
     # this will help generate a dropdown in the automagically created modelform
     # B-reakfast
@@ -48,4 +49,4 @@ class Feeding(models.Model):
     cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.get_meal_display()} on {self.date}"
+        return f"{self.get_meal_display()} on {self.date} for {self.cat}"
